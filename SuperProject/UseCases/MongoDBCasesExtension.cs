@@ -1,5 +1,6 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using SuperProject.Application.Abstractions;
+using SuperProject.MongoDB.Models;
 
 namespace SuperProject.UseCases
 {
@@ -8,6 +9,7 @@ namespace SuperProject.UseCases
         private static string GetHelp(string args)
         {
             string information = "\n" +
+                "add - добавление элемента" +
                 "exit - выход из программы\n" +
                 "get-collections - получение списка всех коллекций\n" +
                 "help - вывод краткой информации о программе\n" +
@@ -31,6 +33,13 @@ namespace SuperProject.UseCases
             string information = "\n";
             switch (args)
             {
+                case "add":
+                    information += "\n" +
+                        "Структура: [command] [argument]\n" +
+                        "\nОтвечает за добавление элементов в коллекцию.\n" +
+                        "Аргументы:\n" +
+                        "-s : вывод всех доступных схем";
+                    break;
                 case "get-collections":
                     information += "\n" +
                         "Структура: [command] [argument]\n" +
@@ -102,6 +111,80 @@ namespace SuperProject.UseCases
         private static string ErrorCommand(string command)
         {
             return $"Не удалось найти комманду {command}. \nДля получения помощи воспользуйтесь командой: help";
+        }
+
+        private static async Task<string> AddNewObject(string args, string currentCollection, ServiceProvider services)
+        {
+            switch(currentCollection)
+            {
+                case "Users":
+                    try
+                    {
+                        var usersService = services.GetService<IUsersService>();
+                        if (usersService is null)
+                        {
+                            return "Не найден сервис userService";
+                        }
+                        var user = Users.Convert(args);
+                        if(user is null)
+                        {
+                            return "Неверный ввод. Для вызова схем воспользуйтесь командой : Add -s";
+                        }
+                        await usersService.CreateNewUserAsync(user);
+                        return "Добавлено";
+                    }
+                    catch(Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                case "Orders":
+                    try
+                    {
+                        var ordersService = services.GetService<IOrdersService>();
+                        if(ordersService is null)
+                        {
+                            return "Не найден сервис ordersService";
+                        }
+                        var order = Orders.Convert(args);
+                        if(order is null)
+                        {
+                            return "Неверный ввод. Для вызова схем воспользуйтесь командой : Add -s";
+                        }
+                        return "Добавлено";
+                    }
+                    catch (Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                case "Categories":
+                    try
+                    {
+                        var categoriesService = services.GetService<ICategoriesService>();
+                        if(categoriesService is null)
+                        {
+                            return "Не найден сервис categoriesService";
+                        }
+                        var category = Categories.Convert(args);
+                        if(category is null)
+                        {
+                            return "Неверный ввод. Для вызова схем воспользуйтесь командой : Add -s";
+                        }
+                        return "Добавлено";
+                    }
+                    catch(Exception ex)
+                    {
+                        return ex.Message;
+                    }
+                default:
+                    break;
+            }
+            return string.Empty;
+        }
+
+        private static string GetAllSchemas()
+        {
+            return $"{Categories.GetSchemaCategories()}\n{Orders.GetSchemaOrders()}\n" +
+                $"{Users.GetSchemaUsers()}\n";
         }
     }
 }

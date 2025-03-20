@@ -23,6 +23,27 @@ namespace SuperProject.UseCases
                 argument = parts.Length > 1 ? parts[1] : string.Empty;
                 switch (command)
                 {
+                    case "add":
+                        if(argument != string.Empty)
+                        {
+                            if (argument[0] == '-')
+                            {
+                                switch(argument)
+                                {
+                                    case "-s":
+                                        Console.WriteLine(GetAllSchemas());
+                                        break;
+                                    default:
+                                        Console.WriteLine(ErrorBadArgument("? add"));
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(await AddNewObject(argument, currentCollection, serviceProvider));
+                            }
+                        }
+                        break;
                     case "exit":
                         exit = true;
                         break;
