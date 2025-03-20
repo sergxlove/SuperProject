@@ -33,20 +33,5 @@ namespace SuperProject.MongoDB.Repositories
             }
             return false;
         }
-
-        public string GetSchemaUsers()
-        {
-            return "Схема users: username, password, dateRegistration";
-        }
-
-        public string GetSchemaOrders()
-        {
-            return "Схема orders: name, description, price, stoke";
-        }
-
-        public string GetSchemaCategories()
-        {
-            return string.Empty;
-        }
     }
 }

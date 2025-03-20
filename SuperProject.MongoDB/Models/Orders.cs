@@ -21,5 +21,27 @@ namespace SuperProject.MongoDB.Models
 
         [BsonIgnoreIfDefault]
         public int Stoke { get; set; }
+
+        public static Orders? Convert(string str)
+        {
+            Orders? result = null;
+            string[] parts = str.Split(", ", 4);
+            if (parts.Length == 4)
+            {
+                result = new()
+                {
+                    Name = parts[0],
+                    Description = parts[1],
+                    Price = System.Convert.ToInt32(parts[2]),
+                    Stoke = System.Convert.ToInt32(parts[3])
+                };
+            }
+            return result;
+        }
+
+        public static string GetSchemaOrders()
+        {
+            return "Схема orders: name, description, price, stoke";
+        }
     }
 }
