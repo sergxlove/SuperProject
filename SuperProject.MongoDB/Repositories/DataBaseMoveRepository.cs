@@ -33,5 +33,15 @@ namespace SuperProject.MongoDB.Repositories
             }
             return false;
         }
+
+        public async Task<string> CreateCollectionAsync(string nameCollection)
+        {
+            await _context.Database.CreateCollectionAsync(nameCollection);
+            if(await CheckCollectionAsync(nameCollection))
+            {
+                return nameCollection;
+            }
+            return string.Empty;
+        }
     }
 }

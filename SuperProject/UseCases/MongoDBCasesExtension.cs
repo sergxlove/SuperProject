@@ -9,7 +9,8 @@ namespace SuperProject.UseCases
         private static string GetHelp(string args)
         {
             string information = "\n" +
-                "add - добавление элемента" +
+                "add - добавление элемента\n" +
+                "add-collection - создание новой коллекции\n" +
                 "exit - выход из программы\n" +
                 "get-collections - получение списка всех коллекций\n" +
                 "help - вывод краткой информации о программе\n" +
@@ -39,6 +40,12 @@ namespace SuperProject.UseCases
                         "\nОтвечает за добавление элементов в коллекцию.\n" +
                         "Аргументы:\n" +
                         "-s : вывод всех доступных схем";
+                    break;
+                case "add-collection":
+                    information += "\n" +
+                        "Структура: [command] [argument]\n" +
+                        "\nОтвечает за создание новой коллекции \n" +
+                        "Аргументы:\n";
                     break;
                 case "get-collections":
                     information += "\n" +
@@ -185,6 +192,25 @@ namespace SuperProject.UseCases
         {
             return $"{Categories.GetSchemaCategories()}\n{Orders.GetSchemaOrders()}\n" +
                 $"{Users.GetSchemaUsers()}\n";
+        }
+
+        private static async Task<string> CreateCollectionAsync(string nameCollection,
+            ServiceProvider services)
+        {
+            try
+            {
+                var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+                if(dataBaseMoveService is null)
+                {
+                    return "Не удалось найти сервис IDataBaseMMoveService";
+                }
+                string result = await dataBaseMoveService.CreateCollectionAsync(nameCollection);
+            }
+            catch(Exception ex)
+            {
+                return ex.Message; 
+            }
+            return string.Empty;
         }
     }
 }

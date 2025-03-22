@@ -4,5 +4,6 @@
     {
         Task<string> GetAllCollectionsAsync();
         Task<bool> CheckCollectionAsync(string nameCollection);
+        Task<string> CreateCollectionAsync(string nameCollection);
     }
 }

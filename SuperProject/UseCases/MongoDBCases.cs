@@ -43,6 +43,28 @@ namespace SuperProject.UseCases
                                 Console.WriteLine(await AddNewObject(argument, currentCollection, serviceProvider));
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine(ErrorArgument("? add"));
+                        }
+                        break;
+                    case "add-collection":
+                        if (argument != string.Empty)
+                        {
+                            if (argument[0] == '-')
+                            {
+                                switch(argument)
+                                {
+                                    default:
+                                        Console.WriteLine(ErrorBadArgument("? add-collection"));
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(await CreateCollectionAsync(argument, serviceProvider));
+                            }
+                        }
                         break;
                     case "exit":
                         exit = true;
