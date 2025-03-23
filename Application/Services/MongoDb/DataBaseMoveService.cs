@@ -26,5 +26,10 @@ namespace SuperProject.Application.Services.MongoDb
         {
             return await _repository.CreateCollectionAsync(nameCollection);
         }
+
+        public async Task<string> DropCollectionAsync(string nameCollection)
+        {
+            return await _repository.DropCollectionAsync(nameCollection);
+        }
     }
 }

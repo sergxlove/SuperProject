@@ -66,6 +66,44 @@ namespace SuperProject.UseCases
                             }
                         }
                         break;
+                    case "drop-collection":
+                        if(argument != string.Empty)
+                        {
+                            if (argument[0] == '-')
+                            {
+                                switch(argument)
+                                {
+                                    case "-y":
+                                        Console.WriteLine(await DropCollectionAsync(currentCollection, serviceProvider));
+                                        break;
+                                    default:
+                                        Console.WriteLine(ErrorBadArgument("? drop-collection"));
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine($"Вы уверены что хотите удалить коллекцию {currentCollection} [Y/n]");
+                                Console.Write($"{username}# > ");
+                                input = Console.ReadLine()!;
+                                switch(input)
+                                {
+                                    case "Y":
+                                        string result = await DropCollectionAsync(currentCollection, serviceProvider);
+                                        if(result == currentCollection)
+                                        {
+                                            currentCollection = result;
+                                        }
+                                        Console.WriteLine(result);
+                                        break;
+                                    case "n":
+                                    default:
+                                        Console.WriteLine($"{currentCollection} не удалена");
+                                        break;
+                                }
+                            }
+                        }
+                        break;
                     case "exit":
                         exit = true;
                         break;
