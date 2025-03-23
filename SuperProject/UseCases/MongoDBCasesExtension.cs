@@ -11,6 +11,7 @@ namespace SuperProject.UseCases
             string information = "\n" +
                 "add - добавление элемента\n" +
                 "add-collection - создание новой коллекции\n" +
+                "drop-collection - удаление коллекции\n" +
                 "exit - выход из программы\n" +
                 "get-collections - получение списка всех коллекций\n" +
                 "help - вывод краткой информации о программе\n" +
@@ -37,26 +38,33 @@ namespace SuperProject.UseCases
                 case "add":
                     information += "\n" +
                         "Структура: [command] [argument]\n" +
-                        "\nОтвечает за добавление элементов в коллекцию.\n" +
+                        "Отвечает за добавление элементов в коллекцию.\n" +
                         "Аргументы:\n" +
-                        "-s : вывод всех доступных схем";
+                        "-s : вывод всех доступных схем\n";
                     break;
                 case "add-collection":
                     information += "\n" +
                         "Структура: [command] [argument]\n" +
-                        "\nОтвечает за создание новой коллекции \n" +
+                        "Отвечает за создание новой коллекции \n" +
                         "Аргументы:\n";
+                    break;
+                case "drop-collection":
+                    information += "\n" +
+                        "Структура: [command] [argument]\n" +
+                        "Отвечает за удаление существующей коллекции \n" +
+                        "Аргументы:\n" +
+                        "-y : удаление коллекций без подтверждения\n";
                     break;
                 case "get-collections":
                     information += "\n" +
                         "Структура: [command] [argument]\n" +
-                        "\nОтвечает за вывод названий доступных коллекций.\n" +
+                        "Отвечает за вывод названий доступных коллекций.\n" +
                         "Аргументы:\n";
                     break;
                 case "rename":
                     information = "\n" +
                         "Структура: [command] [argument]\n" +
-                        "\nОтвечает за переименование имени пользователя.\n" +
+                        "Отвечает за переименование имени пользователя.\n" +
                         "Аргументы:\n" +
                         "-c : вывод текущего имени пользвателя\n" +
                         "-d : сброс имени пользователя\n";
@@ -205,10 +213,37 @@ namespace SuperProject.UseCases
                     return "Не удалось найти сервис IDataBaseMMoveService";
                 }
                 string result = await dataBaseMoveService.CreateCollectionAsync(nameCollection);
+                if(result == nameCollection)
+                {
+                    return result;
+                }
             }
             catch(Exception ex)
             {
                 return ex.Message; 
+            }
+            return string.Empty;
+        }
+
+        private static async Task<string> DropCollectionAsync(string nameCollection,
+            ServiceProvider services)
+        {
+            try
+            {
+                var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+                if (dataBaseMoveService is null)
+                {
+                    return "Не удалось найти сервис IDataBaseMMoveService";
+                }
+                string result = await dataBaseMoveService.DropCollectionAsync(nameCollection);
+                if (result == nameCollection)
+                {
+                    return result;
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
             }
             return string.Empty;
         }
