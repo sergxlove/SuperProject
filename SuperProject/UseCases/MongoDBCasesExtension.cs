@@ -1,6 +1,8 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using MongoDB.Bson;
 using SuperProject.Application.Abstractions;
 using SuperProject.MongoDB.Models;
+using System.Text;
 
 namespace SuperProject.UseCases
 {
@@ -199,7 +201,31 @@ namespace SuperProject.UseCases
         private static string GetAllSchemas()
         {
             return $"{Categories.GetSchemaCategories()}\n{Orders.GetSchemaOrders()}\n" +
-                $"{Users.GetSchemaUsers()}\n";
+                $"{Users.GetSchemaUsers()}\n{GetSchemasBson()}\n";
+        }
+
+        private static string GetSchemasBson()
+        {
+            return "{ \"param1: \"value1, \"param2: \"value2, ... \"paramN: \"valueN }";
+        }
+
+        private static string AddRandomObject(string str)
+        {
+            return BsonDocument.Parse(str).ToString();
+        }
+
+        private static string EraseArgument(string str)
+        {
+            if(str.Length >= 2)
+            {
+                StringBuilder result = new StringBuilder();
+                for(int i = 2; i < str.Length; i++)
+                {
+                    result.Append(str[i]);
+                }
+                return result.ToString();
+            }
+            return string.Empty;
         }
 
         private static async Task<string> CreateCollectionAsync(string nameCollection,
