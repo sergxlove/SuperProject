@@ -33,6 +33,9 @@ namespace SuperProject.UseCases
                                     case "-s":
                                         Console.WriteLine(GetAllSchemas());
                                         break;
+                                    case "-r":
+                                        Console.WriteLine(AddRandomObject(EraseArgument(argument)));
+                                        break;
                                     default:
                                         Console.WriteLine(ErrorBadArgument("? add"));
                                         break;
@@ -75,6 +78,7 @@ namespace SuperProject.UseCases
                                 {
                                     case "-y":
                                         Console.WriteLine(await DropCollectionAsync(currentCollection, serviceProvider));
+                                        currentCollection = string.Empty;
                                         break;
                                     default:
                                         Console.WriteLine(ErrorBadArgument("? drop-collection"));
