@@ -19,6 +19,7 @@ namespace SuperProject.UseCases
                 "get-collections - получение списка всех коллекций\n" +
                 "help - вывод краткой информации о программе\n" +
                 "rename - переименовать пользователя\n" +
+                "rename-collection - переименовать коллекцию\n" +
                 "take - выбор коллекции\n" +
                 "version - вывод информации о версии программы\n" +
                 "? [command] - вывод подробной информации о команде\n";
@@ -40,45 +41,57 @@ namespace SuperProject.UseCases
             {
                 case "add":
                     information += "\n" +
-                        "Структура: [command] [argument]\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
                         "Отвечает за добавление элементов в коллекцию.\n" +
                         "Аргументы:\n" +
-                        "-s : вывод всех доступных схем\n";
+                        "-s : вывод всех доступных схем\n" +
+                        "-t : вывод примеров объектов\n" +
+                        "-r : добавление произвольного объекта в коллекцию\n";
                     break;
                 case "add-collection":
                     information += "\n" +
-                        "Структура: [command] [argument]\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
                         "Отвечает за создание новой коллекции \n" +
                         "Аргументы:\n";
                     break;
                 case "drop-collection":
                     information += "\n" +
-                        "Структура: [command] [argument]\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
                         "Отвечает за удаление существующей коллекции \n" +
                         "Аргументы:\n" +
                         "-y : удаление коллекций без подтверждения\n";
                     break;
                 case "get-collections":
                     information += "\n" +
-                        "Структура: [command] [argument]\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
                         "Отвечает за вывод названий доступных коллекций.\n" +
+                        "Аргументы:\n";
+                    break;
+                case "help":
+                    information += "\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
+                        "Отвечает за вывод информации о доступных командах\n" +
                         "Аргументы:\n";
                     break;
                 case "rename":
                     information = "\n" +
-                        "Структура: [command] [argument]\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
                         "Отвечает за переименование имени пользователя.\n" +
                         "Аргументы:\n" +
                         "-c : вывод текущего имени пользвателя\n" +
                         "-d : сброс имени пользователя\n";
                     break;
+                case "rename-collection":
+                    break;
                 case "take":
                     information += "\n" +
-                        "Структура: [command] [argument]\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
                         "Отвечает за выбор активной коллекции в базе данных.\n" +
                         "Аргументы:\n" +
                         "-rm : сбросить выбранную коллекцию\n" +
                         "-c : вывод текущей выбранной коллекции\n";
+                    break;
+                case "version":
                     break;
                 default:
                     break;
@@ -213,7 +226,10 @@ namespace SuperProject.UseCases
 
         private static string GetTemplatesObjects()
         {
-            return $"";
+            return $"Шаблон объекта Categories: sergxlove, its great developer" +
+                $"\nШаблон объекта Orders: milk, is cool, 100, 12" +
+                $"\nШаблон объекта Users: sergxlove, megapassword" +
+                "\nШаблон для произвольного объекта: { \"name\": \"sergxlove\", \"age\": \"18\" }";
         }
 
         private static async Task<string> AddRandomObject(string str, string nameCollection,
