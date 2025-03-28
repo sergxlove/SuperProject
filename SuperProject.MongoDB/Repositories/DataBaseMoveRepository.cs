@@ -1,6 +1,7 @@
 ﻿using SuperProject.MongoDB.Abstractions;
 using MongoDB.Driver;
 using System.Text;
+using MongoDB.Bson;
 
 namespace SuperProject.MongoDB.Repositories
 {
@@ -52,6 +53,20 @@ namespace SuperProject.MongoDB.Repositories
                 return nameCollection;
             }
             return string.Empty;
+        }
+
+        public async Task<string> AddRandomObjectAsync(string nameCollection, BsonDocument obj)
+        {
+            try
+            {
+                var collection = _context.Database.GetCollection<BsonDocument>(nameCollection);
+                await collection.InsertOneAsync(obj);
+                return obj.ToString();
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
     }
 }

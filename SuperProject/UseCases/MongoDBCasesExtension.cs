@@ -1,6 +1,7 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
 using MongoDB.Bson;
 using SuperProject.Application.Abstractions;
+using SuperProject.Application.Services.MongoDb;
 using SuperProject.MongoDB.Models;
 using System.Text;
 
@@ -206,12 +207,37 @@ namespace SuperProject.UseCases
 
         private static string GetSchemasBson()
         {
-            return "{ \"param1: \"value1, \"param2: \"value2, ... \"paramN: \"valueN }";
+            return "Схема произвольной коллекции:" +
+                "{ \"param1\": \"value1\", \"param2\": \"value2\", ... \"paramN\": \"valueN\" }";
         }
 
-        private static string AddRandomObject(string str)
+        private static string GetTemplatesObjects()
         {
-            return BsonDocument.Parse(str).ToString();
+            return $"";
+        }
+
+        private static async Task<string> AddRandomObject(string str, string nameCollection,
+            ServiceProvider services)
+        {
+            try
+            {
+                var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+                if (dataBaseMoveService is null)
+                {
+                    return "Не удалось найти сервис IDataBaseMMoveService";
+                }
+                string result = await dataBaseMoveService.AddRandomObjectAsync(
+                    nameCollection, BsonDocument.Parse(str));
+                if(str == result)
+                {
+                    return result + "  добавлен";
+                }
+                return "Произошла ошибка добавления объекта";
+            }
+            catch(Exception ex)
+            {
+                return ex.Message;
+            }
         }
 
         private static string EraseArgument(string str)
