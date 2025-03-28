@@ -1,4 +1,5 @@
-﻿using SuperProject.Application.Abstractions;
+﻿using MongoDB.Bson;
+using SuperProject.Application.Abstractions;
 using SuperProject.MongoDB.Abstractions;
 
 namespace SuperProject.Application.Services.MongoDb
@@ -30,6 +31,11 @@ namespace SuperProject.Application.Services.MongoDb
         public async Task<string> DropCollectionAsync(string nameCollection)
         {
             return await _repository.DropCollectionAsync(nameCollection);
+        }
+
+        public async Task<string> AddRandomObjectAsync(string nameCollection, BsonDocument obj)
+        {
+            return await _repository.AddRandomObjectAsync(nameCollection, obj);
         }
     }
 }

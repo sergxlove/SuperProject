@@ -10,6 +10,7 @@ namespace SuperProject.UseCases
             string[] parts;
             string command = string.Empty;
             string argument = string.Empty;
+            string parameter = string.Empty;
             string currentCollection = string.Empty;
             string username = "root"; 
             bool exit = false;
@@ -17,10 +18,11 @@ namespace SuperProject.UseCases
             { 
                 Console.Write($"{username}# > ");
                 input = Console.ReadLine()!;
-                parts = input.Split(' ', 2);
+                parts = input.Split(' ', 3);
                 if (parts.Length == 0) continue;
                 command = parts[0].ToLower();
                 argument = parts.Length > 1 ? parts[1] : string.Empty;
+                parameter = parts.Length > 2 ? parts[2] : string.Empty;
                 switch (command)
                 {
                     case "add":
@@ -34,7 +36,10 @@ namespace SuperProject.UseCases
                                         Console.WriteLine(GetAllSchemas());
                                         break;
                                     case "-r":
-                                        Console.WriteLine(AddRandomObject(EraseArgument(argument)));
+                                        Console.WriteLine(AddRandomObject(parameter, currentCollection,
+                                            serviceProvider));
+                                        break;
+                                    case "-t":
                                         break;
                                     default:
                                         Console.WriteLine(ErrorBadArgument("? add"));
