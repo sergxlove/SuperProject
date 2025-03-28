@@ -40,6 +40,7 @@ namespace SuperProject.UseCases
                                             serviceProvider));
                                         break;
                                     case "-t":
+                                        Console.WriteLine(GetTemplatesObjects());
                                         break;
                                     default:
                                         Console.WriteLine(ErrorBadArgument("? add"));
