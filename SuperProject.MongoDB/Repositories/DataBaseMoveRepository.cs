@@ -45,6 +45,19 @@ namespace SuperProject.MongoDB.Repositories
             return string.Empty;
         }
 
+        public async Task<string> RenameCollectionAsync(string oldName, string newName)
+        {
+            try
+            {
+                await _context.Database.RenameCollectionAsync(oldName, newName);
+                return newName;
+            }
+            catch(Exception ex) 
+            {
+                return ex.Message;
+            }
+        }
+
         public async Task<string> DropCollectionAsync(string nameCollection)
         {
             await _context.Database.DropCollectionAsync(nameCollection);
@@ -66,6 +79,66 @@ namespace SuperProject.MongoDB.Repositories
             catch (Exception ex)
             {
                 return ex.Message;
+            }
+        }
+
+        public async Task<string> DeleteRandomObjectOneAsync(string nameCollection, 
+            BsonDocument filter)
+        {
+            try
+            {
+                var collection = _context.Database.GetCollection<BsonDocument>(nameCollection);
+                var result = await collection.DeleteOneAsync(filter);
+                return result.DeletedCount.ToString();
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+
+        public async Task<string> DeleteRandomObjectManyAsync(string nameCollection, 
+            BsonDocument filter)
+        {
+            try
+            {
+                var collection = _context.Database.GetCollection<BsonDocument>(nameCollection);
+                var result = await collection.DeleteManyAsync(filter);
+                return result.DeletedCount.ToString();
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+
+        public async Task<string> UpdateRandomObjectOneAsync(string nameCollection,
+            BsonDocument filter, BsonDocument obj)
+        {
+            try
+            {
+                var collection = _context.Database.GetCollection<BsonDocument>(nameCollection);
+                var result = await collection.UpdateOneAsync(filter, obj);
+                return result.ModifiedCount.ToString();
+            }
+            catch
+            {
+                return "0";
+            }
+        }
+
+        public async Task<string> UpdateRandomObjectManyAsync(string nameCollection,
+            BsonDocument filter, BsonDocument obj)
+        {
+            try
+            {
+                var collection = _context.Database.GetCollection<BsonDocument>(nameCollection);
+                var result = await collection.UpdateManyAsync(filter, obj);
+                return result.ModifiedCount.ToString();
+            }
+            catch
+            {
+                return "0";
             }
         }
     }

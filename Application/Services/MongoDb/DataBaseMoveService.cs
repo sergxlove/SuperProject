@@ -37,5 +37,30 @@ namespace SuperProject.Application.Services.MongoDb
         {
             return await _repository.AddRandomObjectAsync(nameCollection, obj);
         }
+
+        public Task<string> RenameCollectionAsync(string oldName, string newName)
+        {
+            return _repository.RenameCollectionAsync(oldName, newName);
+        }
+
+        public Task<string> DeleteRandomObjectOneAsync(string nameCollection, BsonDocument filter)
+        {
+            return _repository.DeleteRandomObjectOneAsync(nameCollection, filter);
+        }
+
+        public Task<string> DeleteRandomObjectManyAsync(string nameCollection, BsonDocument filter)
+        {
+            return _repository.DeleteRandomObjectManyAsync(nameCollection, filter);
+        }
+
+        public Task<string> UpdateRandomObjectOneAsync(string nameCollection, BsonDocument filter, BsonDocument obj)
+        {
+            return _repository.UpdateRandomObjectOneAsync(nameCollection, filter, obj);
+        }
+
+        public Task<string> UpdateRandomObjectManyAsync(string nameCollection, BsonDocument filter, BsonDocument obj)
+        {
+            return _repository.UpdateRandomObjectManyAsync(nameCollection, filter, obj);
+        }
     }
 }

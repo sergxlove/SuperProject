@@ -82,6 +82,11 @@ namespace SuperProject.UseCases
                         "-d : сброс имени пользователя\n";
                     break;
                 case "rename-collection":
+                    information += "\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
+                        "Отвечает за переименование коллекции. \n" +
+                        "Аргументы:\n" +
+                        "";
                     break;
                 case "take":
                     information += "\n" +
@@ -312,6 +317,22 @@ namespace SuperProject.UseCases
             catch (Exception ex)
             {
                 return ex.Message;
+            }
+            return string.Empty;
+        }
+
+        private static async Task<string> RenameCollectionAsync(string oldName, string newName, 
+            ServiceProvider services)
+        {
+            var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+            if (dataBaseMoveService is null)
+            {
+                return "Не удалось найти сервис IDataBaseMMoveService";
+            }
+            string result = await dataBaseMoveService.RenameCollectionAsync(oldName, newName);
+            if (result == newName)
+            {
+                return result;
             }
             return string.Empty;
         }
