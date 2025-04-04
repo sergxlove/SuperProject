@@ -151,6 +151,28 @@ namespace SuperProject.UseCases
                             Console.WriteLine(ErrorArgument("? rename"));
                         }
                         break;
+                    case "rename-collection":
+                        if (argument != string.Empty)
+                        {
+                            if (argument[0] == '-')
+                            {
+                                switch (argument)
+                                {
+                                    default:
+                                        Console.WriteLine(ErrorBadArgument("? rename-collection"));
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(ErrorArgument("? rename-collection"));
+                        }
+                        break;
                     case "take":
                         if(argument != string.Empty)
                         {
