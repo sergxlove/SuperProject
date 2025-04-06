@@ -15,12 +15,14 @@ namespace SuperProject.UseCases
                 "add - добавление элемента\n" +
                 "add-collection - создание новой коллекции\n" +
                 "drop-collection - удаление коллекции\n" +
+                "delete - удаление элементов из коллекции\n" +
                 "exit - выход из программы\n" +
                 "get-collections - получение списка всех коллекций\n" +
                 "help - вывод краткой информации о программе\n" +
                 "rename - переименовать пользователя\n" +
                 "rename-collection - переименовать коллекцию\n" +
                 "take - выбор коллекции\n" +
+                "update - обновление данных в коллекции\n" +
                 "version - вывод информации о версии программы\n" +
                 "? [command] - вывод подробной информации о команде\n";
             return information;
@@ -32,6 +34,18 @@ namespace SuperProject.UseCases
                 "Версия 1.0.0, developer sergxlove, 2025\n" +
                 "Все права защищены\n";
             return information;
+        }
+
+        private static string GetDeveloper(string args)
+        {
+            string developer = "\n" +
+                "╔══╗╔═══╗╔═══╗╔═══╗╔══╗╔══╗╔╗──╔══╗╔╗╔╗╔═══╗\n" +
+                "║╔═╝║╔══╝║╔═╗║║╔══╝╚═╗║║╔═╝║║──║╔╗║║║║║║╔══╝\n" +
+                "║╚═╗║╚══╗║╚═╝║║║╔═╗──║╚╝║──║║──║║║║║║║║║╚══╗\n" +
+                "╚═╗║║╔══╝║╔╗╔╝║║╚╗║──║╔╗║──║║──║║║║║╚╝║║╔══╝\n" +
+                "╔═╝║║╚══╗║║║║─║╚═╝║╔═╝║║╚═╗║╚═╗║╚╝║╚╗╔╝║╚══╗\n" +
+                "╚══╝╚═══╝╚╝╚╝─╚═══╝╚══╝╚══╝╚══╝╚══╝─╚╝─╚═══╝\n";
+            return developer;
         }
 
         private static string GetInfoCommand(string args)
@@ -60,6 +74,15 @@ namespace SuperProject.UseCases
                         "Отвечает за удаление существующей коллекции \n" +
                         "Аргументы:\n" +
                         "-y : удаление коллекций без подтверждения\n";
+                    break;
+                case "delete":
+                    information += "\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
+                        "Отвечает за удаление элемента из коллекции\n" +
+                        "Аргументы:\n" +
+                        "-o : удаление одного элемента из коллекции\n" +
+                        "-m : удаление нескольких элементов из коллекции\n" +
+                        "-s : вывод всех доступных схем\n";
                     break;
                 case "get-collections":
                     information += "\n" +
@@ -96,7 +119,14 @@ namespace SuperProject.UseCases
                         "-rm : сбросить выбранную коллекцию\n" +
                         "-c : вывод текущей выбранной коллекции\n";
                     break;
+                case "update":
+                    break;
                 case "version":
+                    information += "\n" +
+                        "Структура: [command] [argument] [parameter]\n" +
+                        "Отвечает за вывод текущей версии приложения\n" +
+                        "Аргументы: \n" +
+                        "-a : вывод информации о разработчике";
                     break;
                 default:
                     break;
@@ -324,17 +354,88 @@ namespace SuperProject.UseCases
         private static async Task<string> RenameCollectionAsync(string oldName, string newName, 
             ServiceProvider services)
         {
-            var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
-            if (dataBaseMoveService is null)
+            try
             {
-                return "Не удалось найти сервис IDataBaseMMoveService";
+                var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+                if (dataBaseMoveService is null)
+                {
+                    return "Не удалось найти сервис IDataBaseMoveService";
+                }
+                string result = await dataBaseMoveService.RenameCollectionAsync(oldName, newName);
+                if (result == newName)
+                {
+                    return result;
+                }
+                return string.Empty;
             }
-            string result = await dataBaseMoveService.RenameCollectionAsync(oldName, newName);
-            if (result == newName)
+            catch (Exception ex)
             {
-                return result;
+                return ex.Message;
             }
-            return string.Empty;
+        }
+
+        private static async Task<string> DeleteRandomObjectAsync(string str, string nameCollection,
+            string argument, ServiceProvider services)
+        {
+            try
+            {
+                var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+                if (dataBaseMoveService is null)
+                {
+                    return "Не удалось найти сервис IDataBaseMoveService";
+                }
+                switch(argument)
+                {
+                    case "-o":
+                        return await dataBaseMoveService.DeleteRandomObjectOneAsync(nameCollection,
+                            BsonDocument.Parse(str));
+                    case "-m":
+                        return await dataBaseMoveService.DeleteRandomObjectManyAsync(nameCollection,
+                            BsonDocument.Parse(str));
+                    default:
+                        throw new Exception(message: "argumentException");
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
+        }
+
+        private static async Task<string> UpdateRandomObjectAsync(string str, string nameCollection,
+            string argument, ServiceProvider services)
+        {
+            try
+            {
+                var dataBaseMoveService = services.GetService<IDataBaseMoveService>();
+                if (dataBaseMoveService is null)
+                {
+                    return "Не удалось найти сервис IDataBaseMoveService";
+                }
+                string[] parts = str.Split("::");
+                if (parts.Length != 2)
+                {
+                    return "Неверный ввод";
+                }
+                BsonDocument filter = BsonDocument.Parse(parts[0]);
+                BsonDocument obj = BsonDocument.Parse(parts[1]);
+                switch(argument)
+                {
+                    case "-o":
+                        return await dataBaseMoveService.UpdateRandomObjectOneAsync(nameCollection,
+                            filter, obj);
+                    case "-m":
+                        return await dataBaseMoveService.UpdateRandomObjectManyAsync(nameCollection,
+                            filter, obj);
+                    default:
+                        throw new Exception(message: "argumentException");
+                        
+                }
+            }
+            catch (Exception ex)
+            {
+                return ex.Message;
+            }
         }
     }
 }
