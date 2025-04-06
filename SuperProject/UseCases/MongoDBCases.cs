@@ -1,4 +1,5 @@
 ﻿using Microsoft.Extensions.DependencyInjection;
+using System.Windows.Markup;
 
 namespace SuperProject.UseCases
 {
@@ -12,10 +13,10 @@ namespace SuperProject.UseCases
             string argument = string.Empty;
             string parameter = string.Empty;
             string currentCollection = string.Empty;
-            string username = "root"; 
+            string username = "root";
             bool exit = false;
-            while(!exit)
-            { 
+            while (!exit)
+            {
                 Console.Write($"{username}# > ");
                 input = Console.ReadLine()!;
                 parts = input.Split(' ', 3);
@@ -26,11 +27,11 @@ namespace SuperProject.UseCases
                 switch (command)
                 {
                     case "add":
-                        if(argument != string.Empty)
+                        if (argument != string.Empty)
                         {
                             if (argument[0] == '-')
                             {
-                                switch(argument)
+                                switch (argument)
                                 {
                                     case "-s":
                                         Console.WriteLine(GetAllSchemas());
@@ -62,7 +63,7 @@ namespace SuperProject.UseCases
                         {
                             if (argument[0] == '-')
                             {
-                                switch(argument)
+                                switch (argument)
                                 {
                                     default:
                                         Console.WriteLine(ErrorBadArgument("? add-collection"));
@@ -74,13 +75,46 @@ namespace SuperProject.UseCases
                                 Console.WriteLine(await CreateCollectionAsync(argument, serviceProvider));
                             }
                         }
+                        else
+                        {
+                            Console.WriteLine(ErrorBadArgument("? add-collection"));
+                        }
                         break;
-                    case "drop-collection":
+                    case "delete":
                         if(argument != string.Empty)
                         {
                             if (argument[0] == '-')
                             {
-                                switch(argument)
+                                switch (argument)
+                                {
+                                    case "-o":
+                                        Console.WriteLine();
+                                        break;
+                                    case "-m":
+                                        break;
+                                    case "-s":
+                                        Console.WriteLine(GetAllSchemas());
+                                        break;
+                                    default:
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(ErrorBadArgument("? delete"));
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(ErrorBadArgument("? delete"));
+                        }
+                        break;
+                    case "drop-collection":
+                        if (argument != string.Empty)
+                        {
+                            if (argument[0] == '-')
+                            {
+                                switch (argument)
                                 {
                                     case "-y":
                                         Console.WriteLine(await DropCollectionAsync(currentCollection, serviceProvider));
@@ -93,24 +127,28 @@ namespace SuperProject.UseCases
                             }
                             else
                             {
-                                Console.WriteLine($"Вы уверены что хотите удалить коллекцию {currentCollection} [Y/n]");
-                                Console.Write($"{username}# > ");
-                                input = Console.ReadLine()!;
-                                switch(input)
-                                {
-                                    case "Y":
-                                        string result = await DropCollectionAsync(currentCollection, serviceProvider);
-                                        if(result == currentCollection)
-                                        {
-                                            currentCollection = result;
-                                        }
-                                        Console.WriteLine(result);
-                                        break;
-                                    case "n":
-                                    default:
-                                        Console.WriteLine($"{currentCollection} не удалена");
-                                        break;
-                                }
+                                Console.WriteLine(ErrorBadArgument("? drop-collection"));
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Вы уверены что хотите удалить коллекцию {currentCollection} [Y/n]");
+                            Console.Write($"{username}# > ");
+                            input = Console.ReadLine()!;
+                            switch (input)
+                            {
+                                case "Y":
+                                    string result = await DropCollectionAsync(currentCollection, serviceProvider);
+                                    if (result == currentCollection)
+                                    {
+                                        currentCollection = result;
+                                    }
+                                    Console.WriteLine(result);
+                                    break;
+                                case "n":
+                                default:
+                                    Console.WriteLine($"{currentCollection} не удалена");
+                                    break;
                             }
                         }
                         break;
@@ -121,14 +159,14 @@ namespace SuperProject.UseCases
                         Console.WriteLine(await GetCollections(argument, serviceProvider));
                         break;
                     case "help":
-                        Console.WriteLine(GetHelp(argument)); 
+                        Console.WriteLine(GetHelp(argument));
                         break;
                     case "rename":
-                        if(argument != string.Empty)
+                        if (argument != string.Empty)
                         {
                             if (argument[0] == '-')
                             {
-                                switch(argument)
+                                switch (argument)
                                 {
                                     case "-c":
                                         Console.WriteLine($"\nТекущее имя: {username}\n");
@@ -165,7 +203,7 @@ namespace SuperProject.UseCases
                             }
                             else
                             {
-                                
+                                Console.WriteLine(await RenameCollectionAsync(currentCollection, argument, serviceProvider));
                             }
                         }
                         else
@@ -174,11 +212,11 @@ namespace SuperProject.UseCases
                         }
                         break;
                     case "take":
-                        if(argument != string.Empty)
+                        if (argument != string.Empty)
                         {
                             if (argument[0] == '-')
                             {
-                                switch(argument)
+                                switch (argument)
                                 {
                                     case "-c":
                                         Console.WriteLine(currentCollection);
@@ -193,7 +231,7 @@ namespace SuperProject.UseCases
                             }
                             else
                             {
-                                if(await CheckCollection(argument, serviceProvider))
+                                if (await CheckCollection(argument, serviceProvider))
                                 {
                                     currentCollection = argument;
                                 }
@@ -208,8 +246,33 @@ namespace SuperProject.UseCases
                             Console.WriteLine(ErrorArgument("? take"));
                         }
                         break;
+                    case "update":
+                        break;
                     case "version":
-                        Console.WriteLine(GetVersion(argument));
+                        if (argument != string.Empty)
+                        {
+                            if (argument[0] == '-')
+                            {
+                                switch (argument)
+                                {
+                                    case "-a":
+                                        Console.WriteLine(GetDeveloper(argument));
+                                        Console.WriteLine(GetVersion(argument));
+                                        break;
+                                    default:
+                                        Console.WriteLine(ErrorBadArgument("? version"));
+                                        break;
+                                }
+                            }
+                            else
+                            {
+                                Console.WriteLine(ErrorBadArgument("? version"));
+                            }
+                        }
+                        else
+                        {
+                            Console.WriteLine(GetVersion(argument));
+                        }
                         break;
                     case "?":
                         Console.WriteLine(GetInfoCommand(argument));
