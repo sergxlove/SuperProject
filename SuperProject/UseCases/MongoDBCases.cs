@@ -7,11 +7,11 @@ namespace SuperProject.UseCases
     {
         public static async Task UseCaseMongoDB(ServiceProvider serviceProvider)
         {
-            string input = string.Empty;
+            string input;
             string[] parts;
-            string command = string.Empty;
-            string argument = string.Empty;
-            string parameter = string.Empty;
+            string command;
+            string argument;
+            string parameter;
             string currentCollection = string.Empty;
             string username = "root";
             bool exit = false;
@@ -159,7 +159,7 @@ namespace SuperProject.UseCases
                         Console.WriteLine(await GetCollections(argument, serviceProvider));
                         break;
                     case "help":
-                        Console.WriteLine(GetHelp(argument));
+                        Console.WriteLine(GetHelp());
                         break;
                     case "rename":
                         if (argument != string.Empty)

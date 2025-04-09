@@ -9,7 +9,7 @@ namespace SuperProject.UseCases
 {
     public partial class MongoDBCases
     {
-        private static string GetHelp(string args)
+        private static string GetHelp()
         {
             string information = "\n" +
                 "add - добавление элемента\n" +
@@ -289,20 +289,6 @@ namespace SuperProject.UseCases
             {
                 return ex.Message;
             }
-        }
-
-        private static string EraseArgument(string str)
-        {
-            if(str.Length >= 2)
-            {
-                StringBuilder result = new StringBuilder();
-                for(int i = 2; i < str.Length; i++)
-                {
-                    result.Append(str[i]);
-                }
-                return result.ToString();
-            }
-            return string.Empty;
         }
 
         private static async Task<string> CreateCollectionAsync(string nameCollection,
