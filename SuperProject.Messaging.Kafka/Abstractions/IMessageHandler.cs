@@ -1,4 +1,4 @@
-﻿namespace SuperProject.Messaging.Kafka.Handlers
+﻿namespace SuperProject.Messaging.Kafka.Abstractions
 {
     public interface IMessageHandler<in TMessage>
     {

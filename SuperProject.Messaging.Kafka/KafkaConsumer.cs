@@ -1,7 +1,7 @@
 ﻿using Confluent.Kafka;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Options;
-using SuperProject.Messaging.Kafka.Handlers;
+using SuperProject.Messaging.Kafka.Abstractions;
 using SuperProject.Messaging.Kafka.Serializers;
 
 namespace SuperProject.Messaging.Kafka
@@ -33,7 +33,32 @@ namespace SuperProject.Messaging.Kafka
         }
         protected override Task ExecuteAsync(CancellationToken stoppingToken)
         {
-            throw new NotImplementedException();
+            return Task.Run(() => ConsumeAsync(stoppingToken), stoppingToken);
         }
+
+        public override Task StopAsync(CancellationToken cancellationToken)
+        {
+            _consumer.Close();
+            return base.StopAsync(cancellationToken);
+        }
+        
+
+        private async Task? ConsumeAsync(CancellationToken stoppingToken)
+        {
+            _consumer.Subscribe(_topic);
+            try
+            {
+                while (!stoppingToken.IsCancellationRequested)
+                {
+                    var result = _consumer.Consume(stoppingToken);
+                    await _messageHandler.HandleAsync(result.Message.Value, stoppingToken);
+                }
+            }
+            catch
+            {
+
+            }
+        }
+ 
     }
 }
