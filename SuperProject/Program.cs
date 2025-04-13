@@ -4,6 +4,7 @@ using SuperProject.Application.Abstractions;
 using SuperProject.Application.Services.MongoDb;
 using SuperProject.Messaging.Kafka;
 using SuperProject.Messaging.Kafka.Abstractions;
+using SuperProject.Messaging.Kafka.Handlers;
 using SuperProject.Messaging.Kafka.Models;
 using SuperProject.MongoDB;
 using SuperProject.MongoDB.Abstractions;
@@ -26,6 +27,8 @@ namespace SuperProject
             serviceCollection.Configure<KafkaSettings>(config.GetSection("Kafka:Order"));
             serviceCollection.AddSingleton<IMongoDbContext ,MongoDbContext>();
             serviceCollection.AddSingleton<IKafkaProducer<Order>, KafkaProducer<Order>>();
+            serviceCollection.AddHostedService<KafkaConsumer<Order>>();
+            serviceCollection.AddSingleton<IMessageHandler<Order>, MessageHandler>();
             serviceCollection.AddScoped<ICategoriesRepository, CategoriesRepository>();
             serviceCollection.AddSingleton<IDataBaseMoveRepository, DataBaseMoveRepository>();
             serviceCollection.AddScoped<IOrdersRepository, OrdersRepository>();
